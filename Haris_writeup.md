@@ -125,7 +125,7 @@ Implementation of this part of the code is done in `find_lane_pixels()`. It take
 
 Next, I create 9 windows to be plotted on the lane lines. This helps to visualize and construct the lane lines. Width of each window is the same. They are constructed as follows.
 
-```
+```python
     win_y_low = binary_warped.shape[0] - (window + 1) * window_height
     win_y_high = binary_warped.shape[0] - window * window_height
     
@@ -140,21 +140,21 @@ Next, I create 9 windows to be plotted on the lane lines. This helps to visualiz
 
 Inside each window, good indices are found by using the code snipet below (left indices shown only here).
 
-```
+```python
    good_left_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high)
                     & (nonzerox >= win_leftx_low) & (nonzerox < win_leftx_high)).nonzero()[0]
 
 ```
 `nonzerox` and `nonzeroy` are all the nonzero pixels at x and y locations respectively. All these indices are appended to a list. If the `good_left_inds` is greater than a pre-set minimum pixel value (50 in this case), then the `leftx_current` is moved about mean position of these good x indices which is implemented as follows.
 
-```
+```python
     if len(good_left_inds) > min_pix:
         leftx_current = np.int(np.mean(nonzerox[good_left_inds]))
 ```
 
 This process is repeated for all windows until we have all the left and right lane indices. Finally, the lane-line pixels are identified as follows (left line shown only).
 
-```
+```python
     leftx = nonzerox[left_lane_inds]
     lefty = nonzeroy[left_lane_inds]
 ```
@@ -163,7 +163,7 @@ This function `find_lane_pixels()` returns pixel positions and an image: `leftx`
 
 Next comes fitting a polynomial to these pixel positions. That is implemented in `fit_poly()`. Numpy's `polyfit()` method is used to get polynomial coefficients related to left and right lines. After which they are fitted as follows,
 
-```
+```python
     left_fitx = left_fit[0]*ploty**2 + left_fit[1]*ploty + left_fit[2]
     right_fitx = right_fit[0]*ploty**2 + right_fit[1]*ploty + right_fit[2]
 ```
@@ -178,31 +178,31 @@ Code: Line `265` to `271`
 
 Curvature radius is implemented in `measure_curvature_real()`. It takes in `left_fit_real` and `right_fit_real`.
 
-`
+```python
     left_fit_real = np.polyfit(lefty*ym_per_pix, leftx*xm_per_pix, 2)
     right_fit_real = np.polyfit(righty*ym_per_pix, rightx*xm_per_pix, 2)
-`
+```
 
 where `ym_per_pix = 30/720` is the meter per pixel ratio in y direction and `xm_per_pix = 3.7/700` is the ratio in x direction. Left, right and curvature radiuses are calculated as follows.
 
-`
+```python
     left_curve_rad = ((1 + (2*left_fit_real[0]*ymax + left_fit_real[1])**2)**1.5) / np.absolute(2*left_fit_real[0])
     right_curve_rad = ((1 + (2*right_fit_real[0]*ymax + right_fit_real[1])**2)**1.5) / np.absolute(2*right_fit_real[0])
     curve_rad = (left_curve_rad + right_curve_rad) / 2
-`
+```
 
 Code: Line `273` to `281`
 
 Vehicle position is implemented in `vehicle_position()`. It takes in `left_fitx`, `right_fitx` and `xm_per_pix`. Left and right line x positions at the base of the image are found out and lane midpoint is calculated. Offset of the car is then deduced by subtracting the lane midpoint from the image center.
 
-`
+```python
     left_x_pos = left_fitx[-1]*xm_per_pix
     right_x_pos = right_fitx[-1]*xm_per_pix
     lane_midpoint = (left_x_pos + right_x_pos) / 2
     image_center = (warped.shape[1]//2) * xm_per_pix
     
     offset = image_center - lane_midpoint
-`
+```
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
