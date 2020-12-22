@@ -39,6 +39,7 @@ ALL OF THE CODE REFERRED TO BELOW IS IN THE FILE `Main.ipynb`.
 #### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
 Code: Line `11` to `30`
+
 I used multiple chessboard images to calibrate the camera, method for which is implemented in the function `calibrate()`. Corners of the chessboard pattern are found using opencv method `findChessboardCorners()`. The same corner points are then used to draw them up using opencv method `drawChessboardCorners()`. All corners detected are appended to a list called `imgpoints[]` (which is an array of 2D points in image plane). Another array, `objpoints[]`, will have 3D points, `objp`, in real world space denoting the object coordinates of 9x6 chessboard corners. 
 
 These imgpoints and objpoints are then fed into the opencv method `calibrateCamera()` to calculate `cameraMatrix` (a matrix mapping the 2D and 3D points) and `distCoeffs` (distortion coefficients).
@@ -58,21 +59,25 @@ An example of a distortion corrected test image is as follows.
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
 Code: Line `33` to `44`
+
 The undistorted image is then used to get further processed. Thresholded binary images are created to identify lane lines. First, I use gradient thresholding in x direction since the lines we are looking for run vertically through the image. This is achieved by using an opencv method `Sobel`. Implementation is done in `abs_sobel_thresh()`. Have a look at the results here.
 
 ![alt text][image3]
 
 Code: Line `47` to `56`
+
 Next, I perform magnitude thresholding on test images which is implemented in `mag_thresh()`. This allows me to see the magnitude of each pixel in the image hence helping in the identification of the lane lines. Have a look at the results here.
 
 ![alt text][image4]
 
 Code: Line `59` to `69`
+
 Then comes directional thresholding which is implemented in `dir_thresh()`. This helps me to see which pixels are aligned between 0 and 90deg both left and right. Have a look at the results here.
 
 ![alt text][image5]
 
 Code: Line `72` to `78`
+
 Finally, I move on to color thresholding which is one of the most important steps in correctly finding the lines when it comes to varying road shades. I used HLS color space to extract the S channel which is able to identify the lane lines better than other channels. Code for this is implemented in `color_thresh()`. The S channel binary image is displayed below.
 
 ![alt text][image6]
@@ -84,6 +89,7 @@ With all thresholds combined, the binary image looks like this.
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
 Code: Line `98` to `114`
+
 Perspective transformation is implemented in `persp_transform()`. First, we create a 3x3 transformation matrix `M` using opencv method `getPerspectiveTransform()`. This method takes in four pairs of corresponding points which are called source and destination points. 
 
 ```python
@@ -114,6 +120,7 @@ Next, I apply perspective transformation to an image by using the opencv method 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
 Code: Line `117` to `195`
+
 Implementation of this part of the code is done in `find_lane_pixels()`. It takes in a binary warped image. A histogram is created using bottom half the image. Left and right lane line positions are found out using numpy's `argmax()` method. X positions of the lane lines are calculated by seeing where the highest pixel value lies in the image. These are referred to as `leftx_base` and `rightx_base`.
 
 Next, I create 9 windows to be plotted on the lane lines. This helps to visualize and construct the lane lines. Width of each window is the same. They are constructed as follows.
@@ -168,6 +175,7 @@ where `left_fitx` and `right_fitx` are left and right line polynomial coefficien
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
 Code: Line `265` to `271`
+
 Curvature radius is implemented in `measure_curvature_real()`. It takes in `left_fit_real` and `right_fit_real`.
 
 `
@@ -184,6 +192,7 @@ where `ym_per_pix = 30/720` is the meter per pixel ratio in y direction and `xm_
 `
 
 Code: Line `273` to `281`
+
 Vehicle position is implemented in `vehicle_position()`. It takes in `left_fitx`, `right_fitx` and `xm_per_pix`. Left and right line x positions at the base of the image are found out and lane midpoint is calculated. Offset of the car is then deduced by subtracting the lane midpoint from the image center.
 
 `
@@ -197,7 +206,8 @@ Vehicle position is implemented in `vehicle_position()`. It takes in `left_fitx`
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-Code: Line `284` to `333` 
+Code: Line `284` to `333`
+
 The result is implemented and plotted back down onto the road in `draw_final_image()`. Then the text is overlayed onto the final image in `text_overlay()`.
 
 ![alt text][image10]
