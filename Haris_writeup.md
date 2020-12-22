@@ -21,7 +21,7 @@ The goals or steps of this project are the following:
 [//]: # (Image References)
 
 [image1]: ./output_images/undistorted_chessboard.png "Undistorted Chessboard"
-[image2]: ./output_images/undistorted_test_image "Undistorted Road"
+[image2]: ./output_images/undistorted_test_image.png "Undistorted Road"
 [image3]: ./output_images/gradient_binary.png "Gradient Binary Example"
 [image4]: ./output_images/magnitude_binary.png "Magnitude Threshold"
 [image5]: ./output_images/direction_binary.png "Directional Threshold"
