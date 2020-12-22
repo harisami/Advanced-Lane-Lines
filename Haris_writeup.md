@@ -218,11 +218,7 @@ The result is implemented and plotted back down onto the road in `draw_final_ima
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Enjoy my video output here!
-
-![alt text][video1]
-
-Here's a [link to my video result](./project_video_output_full.mp4)
+Here's a [link to my video output.](./project_video_output_full.mp4)
 
 ---
 
